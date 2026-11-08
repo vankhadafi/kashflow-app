@@ -1,0 +1,18 @@
+{
+  "name": "Kashflow — Financial Tracker",
+  "short_name": "Kashflow",
+  "description": "Smart Financial & Expense Tracker",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F8FAFC",
+  "theme_color": "#4F46E5",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
