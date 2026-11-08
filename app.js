@@ -183,6 +183,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Event Listeners
 function initEventListeners() {
+  // Sidebar Mobile Toggle
+  const sidebar = document.querySelector('.sidebar');
+  const sidebarToggleBtn = document.getElementById('sidebarToggleBtn');
+  const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+  if (sidebarToggleBtn && sidebar && sidebarOverlay) {
+    sidebarToggleBtn.addEventListener('click', () => {
+      sidebar.classList.toggle('open');
+      sidebarOverlay.classList.toggle('hidden', !sidebar.classList.contains('open'));
+    });
+
+    sidebarOverlay.addEventListener('click', () => {
+      sidebar.classList.remove('open');
+      sidebarOverlay.classList.add('hidden');
+    });
+  }
+
   // Theme Switcher
   const themeBtn = document.getElementById('themeToggleBtn');
   if (themeBtn) {
@@ -254,6 +271,14 @@ function switchTab(tabId) {
   document.querySelectorAll('.tab-pane').forEach(pane => {
     pane.classList.toggle('active', pane.id === `tab-${tabId}`);
   });
+
+  // Tutup sidebar di mobile setelah memilih menu
+  const sidebar = document.querySelector('.sidebar');
+  const sidebarOverlay = document.getElementById('sidebarOverlay');
+  if (sidebar && sidebar.classList.contains('open')) {
+    sidebar.classList.remove('open');
+    if (sidebarOverlay) sidebarOverlay.classList.add('hidden');
+  }
 
   const titles = {
     overview: 'Ringkasan Finansial',
