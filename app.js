@@ -159,10 +159,12 @@ function showToast(msg) {
 
 // Lifecycle Init
 document.addEventListener('DOMContentLoaded', () => {
-  // Register Service Worker for PWA
+  // Jika service worker versi lama nyangkut, unregister dulu agar langsung fetch versi terbaru
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/sw.js').catch(err => {
-      console.log('SW registration skipped:', err);
+    navigator.serviceWorker.getRegistrations().then(registrations => {
+      for (let registration of registrations) {
+        registration.update();
+      }
     });
   }
 
