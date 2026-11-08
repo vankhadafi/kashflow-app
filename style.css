@@ -93,7 +93,34 @@ body {
   min-height: 100vh;
 }
 
-/* Sidebar */
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* Sidebar Toggle Button (Desktop & Mobile) */
+.btn-sidebar-toggle {
+  display: flex !important;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  color: var(--text-main);
+  padding: 8px 10px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.15s ease;
+}
+
+.btn-sidebar-toggle:hover {
+  background: var(--bg-surface-elevated);
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+/* Collapsible Sidebar (Desktop) */
 .sidebar {
   width: 270px;
   background-color: var(--bg-surface);
@@ -105,6 +132,13 @@ body {
   top: 0;
   height: 100vh;
   flex-shrink: 0;
+  transition: width 0.25s ease, padding 0.25s ease, margin-left 0.25s ease, transform 0.25s ease;
+}
+
+.sidebar.collapsed {
+  margin-left: -270px;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .brand {

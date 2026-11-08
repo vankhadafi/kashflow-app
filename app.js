@@ -185,21 +185,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Event Listeners
 function initEventListeners() {
-  // Sidebar Mobile Toggle
+  // Sidebar Toggle (Desktop & Mobile)
   const sidebar = document.querySelector('.sidebar');
   const sidebarToggleBtn = document.getElementById('sidebarToggleBtn');
   const sidebarOverlay = document.getElementById('sidebarOverlay');
 
-  if (sidebarToggleBtn && sidebar && sidebarOverlay) {
+  if (sidebarToggleBtn && sidebar) {
     sidebarToggleBtn.addEventListener('click', () => {
-      sidebar.classList.toggle('open');
-      sidebarOverlay.classList.toggle('hidden', !sidebar.classList.contains('open'));
+      const isMobile = window.innerWidth <= 900;
+      if (isMobile) {
+        sidebar.classList.toggle('open');
+        if (sidebarOverlay) {
+          sidebarOverlay.classList.toggle('hidden', !sidebar.classList.contains('open'));
+        }
+      } else {
+        sidebar.classList.toggle('collapsed');
+        // Redraw charts agar menyesuaikan lebar layar yang melebar
+        setTimeout(renderCharts, 300);
+      }
     });
 
-    sidebarOverlay.addEventListener('click', () => {
-      sidebar.classList.remove('open');
-      sidebarOverlay.classList.add('hidden');
-    });
+    if (sidebarOverlay) {
+      sidebarOverlay.addEventListener('click', () => {
+        sidebar.classList.remove('open');
+        sidebarOverlay.classList.add('hidden');
+      });
+    }
   }
 
   // Theme Switcher
