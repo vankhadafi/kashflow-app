@@ -296,8 +296,11 @@
           </div>
           <form id="budgetConfigForm" class="budget-form">
             <div class="form-group">
-              <label for="monthlyBudgetInput">Target Limit Bulanan (Rp)</label>
-              <input type="number" id="monthlyBudgetInput" min="100000" step="50000" required>
+              <label for="monthlyBudgetInput">Target Limit Bulanan</label>
+              <div class="currency-input-group">
+                <span class="currency-prefix">Rp.</span>
+                <input type="text" id="monthlyBudgetInput" placeholder="0" required inputmode="numeric">
+              </div>
             </div>
             <button type="submit" class="btn btn-primary">Simpan Anggaran</button>
           </form>
@@ -335,8 +338,11 @@
         </div>
 
         <div class="form-group">
-          <label for="txAmount">Nominal (Rp)</label>
-          <input type="number" id="txAmount" placeholder="Contoh: 300000" required min="100">
+          <label for="txAmount">Nominal</label>
+          <div class="currency-input-group">
+            <span class="currency-prefix">Rp.</span>
+            <input type="text" id="txAmount" placeholder="0" required inputmode="numeric">
+          </div>
         </div>
 
         <div class="form-group">

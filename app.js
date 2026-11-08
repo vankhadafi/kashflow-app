@@ -53,6 +53,32 @@ function formatRupiah(val) {
   return `Rp. ${formattedNumber}`;
 }
 
+function parseCurrencyNumber(str) {
+  if (!str) return 0;
+  const cleaned = str.toString().replace(/[^0-9]/g, '');
+  return Number(cleaned) || 0;
+}
+
+function formatThousandSeparators(val) {
+  if (!val && val !== 0) return '';
+  return new Intl.NumberFormat('id-ID').format(val);
+}
+
+function attachRupiahAutoFormat(inputEl) {
+  if (!inputEl) return;
+  inputEl.addEventListener('input', (e) => {
+    // Ambil angka murni saja
+    const rawVal = e.target.value.replace(/[^0-9]/g, '');
+    if (!rawVal) {
+      e.target.value = '';
+      return;
+    }
+    const num = Number(rawVal);
+    // Format hanya pemisah ribuan titik (contoh: 300.000)
+    e.target.value = formatThousandSeparators(num);
+  });
+}
+
 function formatDate(isoStr) {
   if (!isoStr) return '';
   const d = new Date(isoStr);
@@ -184,7 +210,10 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Set default form date to today
   document.getElementById('txDate').value = new Date().toISOString().split('T')[0];
-  document.getElementById('monthlyBudgetInput').value = STATE.monthlyBudget;
+  document.getElementById('monthlyBudgetInput').value = formatThousandSeparators(STATE.monthlyBudget);
+  
+  attachRupiahAutoFormat(document.getElementById('txAmount'));
+  attachRupiahAutoFormat(document.getElementById('monthlyBudgetInput'));
 });
 
 // Event Listeners
@@ -248,7 +277,7 @@ function initEventListeners() {
   // Budget Form
   document.getElementById('budgetConfigForm').addEventListener('submit', (e) => {
     e.preventDefault();
-    const val = Number(document.getElementById('monthlyBudgetInput').value);
+    const val = parseCurrencyNumber(document.getElementById('monthlyBudgetInput').value);
     if (val > 0) {
       STATE.monthlyBudget = val;
       saveState();
@@ -322,7 +351,7 @@ function openTxModal(editTx = null) {
     title.innerText = 'Edit Transaksi';
     editIdInput.value = editTx.id;
     document.querySelector(`input[name="txType"][value="${editTx.type}"]`).checked = true;
-    document.getElementById('txAmount').value = editTx.amount;
+    document.getElementById('txAmount').value = formatThousandSeparators(editTx.amount);
     document.getElementById('txDesc').value = editTx.desc;
     document.getElementById('txCategory').value = editTx.category;
     document.getElementById('txDate').value = editTx.date;
@@ -330,6 +359,7 @@ function openTxModal(editTx = null) {
     title.innerText = 'Tambah Transaksi Baru';
     editIdInput.value = '';
     txForm.reset();
+    document.getElementById('txAmount').value = '';
     document.getElementById('txDate').value = new Date().toISOString().split('T')[0];
     document.querySelector('input[name="txType"][value="expense"]').checked = true;
   }
@@ -340,7 +370,7 @@ function openTxModal(editTx = null) {
 function handleTxSubmit() {
   const editId = document.getElementById('editId').value;
   const type = document.querySelector('input[name="txType"]:checked').value;
-  const amount = Number(document.getElementById('txAmount').value);
+  const amount = parseCurrencyNumber(document.getElementById('txAmount').value);
   const desc = document.getElementById('txDesc').value.trim();
   const category = document.getElementById('txCategory').value;
   const date = document.getElementById('txDate').value;
