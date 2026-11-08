@@ -1,0 +1,12 @@
+{
+  "name": "kashflow",
+  "version": "1.0.0",
+  "description": "Kashflow Expense Tracker with Aiven PostgreSQL & Vercel Serverless",
+  "main": "api/index.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "pg": "^8.23.1"
+  }
+}

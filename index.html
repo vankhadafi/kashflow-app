@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kashflow — Financial Intelligence</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-badge">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </div>
+        <div>
+          <h2>Kashflow</h2>
+          <span class="subtext">Personal Finance</span>
+        </div>
+      </div>
+
+      <nav class="nav-menu">
+        <button class="nav-item active" data-tab="overview">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          Ringkasan
+        </button>
+        <button class="nav-item" data-tab="transactions">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+          Transaksi
+        </button>
+        <button class="nav-item" data-tab="analytics">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          Analisis & Grafik
+        </button>
+        <button class="nav-item" data-tab="budget">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+          Target Anggaran
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="budget-pill">
+          <div class="budget-pill-header">
+            <span>Limit Bulanan</span>
+            <span id="budgetPctText" class="mono">0%</span>
+          </div>
+          <div class="progress-bar"><div id="budgetProgressBar" class="progress-fill"></div></div>
+          <p id="budgetRemainingText" class="subtext">Sisa: Rp 0</p>
+        </div>
+        <button id="exportCsvBtn" class="btn-ghost-sm" title="Export CSV">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Ekspor Data (CSV)
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <!-- Top Bar -->
+      <header class="topbar">
+        <div>
+          <h1 id="pageTitle">Ringkasan Finansial</h1>
+          <p class="subtitle" id="currentDateStr">Update real-time dompet & pengeluaran</p>
+        </div>
+        <div class="topbar-actions">
+          <button id="themeToggleBtn" class="btn-theme-toggle" title="Ganti Tema Terang/Gelap">
+            <svg id="themeIconSun" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+            <svg id="themeIconMoon" class="hidden" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          </button>
+          <button id="openModalBtn" class="btn btn-primary">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Tambah Transaksi
+          </button>
+        </div>
+      </header>
+
+      <!-- KPI Summary Cards -->
+      <section class="kpi-grid">
+        <div class="kpi-card balance-card">
+          <div class="kpi-header">
+            <span class="kpi-label">Total Saldo Bersih</span>
+            <span class="kpi-icon icon-balance">
+              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+            </span>
+          </div>
+          <div class="kpi-value mono" id="totalBalance">Rp 0</div>
+          <div class="kpi-footer">
+            <span class="kpi-subtext" id="savingsRateText">Tingkat Tabungan: 0%</span>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-header">
+            <span class="kpi-label">Pemasukan Bulan Ini</span>
+            <span class="kpi-icon icon-income">
+              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+            </span>
+          </div>
+          <div class="kpi-value mono text-income" id="totalIncome">Rp 0</div>
+          <div class="kpi-footer">
+            <span class="kpi-subtext" id="incomeCount">0 transaksi tercatat</span>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-header">
+            <span class="kpi-label">Pengeluaran Bulan Ini</span>
+            <span class="kpi-icon icon-expense">
+              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/></svg>
+            </span>
+          </div>
+          <div class="kpi-value mono text-expense" id="totalExpense">Rp 0</div>
+          <div class="kpi-footer">
+            <span class="kpi-subtext" id="expenseBurnRate">Rata-rata/hari: Rp 0</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Dynamic Tab Views -->
+      <!-- TAB 1: OVERVIEW -->
+      <section id="tab-overview" class="tab-pane active">
+        <div class="dashboard-grid">
+          <!-- Main Chart Card -->
+          <div class="panel-card chart-panel">
+            <div class="panel-header">
+              <div>
+                <h3 class="panel-title">Tren Arus Kas (7 Hari Terakhir)</h3>
+                <span class="panel-subtitle">Komparasi Pemasukan vs Pengeluaran Harian</span>
+              </div>
+              <div class="badge-tag">Live Canvas</div>
+            </div>
+            <div class="chart-container">
+              <canvas id="barChart" width="600" height="260"></canvas>
+            </div>
+          </div>
+
+          <!-- Category Breakdown Chart -->
+          <div class="panel-card">
+            <div class="panel-header">
+              <div>
+                <h3 class="panel-title">Distribusi Kategori</h3>
+                <span class="panel-subtitle">Alokasi belanja terbesar</span>
+              </div>
+            </div>
+            <div class="donut-wrapper">
+              <div class="donut-chart-box">
+                <canvas id="donutChart" width="220" height="220"></canvas>
+              </div>
+              <div class="legend-list" id="categoryLegend"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Transactions Preview -->
+        <div class="panel-card mt-6">
+          <div class="panel-header">
+            <div>
+              <h3 class="panel-title">Transaksi Terkini</h3>
+              <span class="panel-subtitle">5 histori pencatatan terbaru</span>
+            </div>
+            <button class="btn-text" onclick="switchTab('transactions')">Lihat Semua Transaksi &rarr;</button>
+          </div>
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Tanggal</th>
+                  <th>Keterangan</th>
+                  <th>Kategori</th>
+                  <th>Tipe</th>
+                  <th class="text-right">Jumlah</th>
+                  <th class="text-center">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="recentTransactionsBody">
+                <!-- Injected via JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 2: TRANSACTIONS LIST & FILTER -->
+      <section id="tab-transactions" class="tab-pane">
+        <div class="panel-card">
+          <div class="filter-bar">
+            <div class="search-input-wrapper">
+              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input type="text" id="searchFilter" placeholder="Cari keterangan atau catatan...">
+            </div>
+            <div class="filter-controls">
+              <select id="typeFilter">
+                <option value="all">Semua Tipe</option>
+                <option value="expense">Pengeluaran</option>
+                <option value="income">Pemasukan</option>
+              </select>
+              <select id="categoryFilter">
+                <option value="all">Semua Kategori</option>
+                <option value="Makanan">Makanan & Minuman</option>
+                <option value="Transport">Transportasi</option>
+                <option value="Belanja">Belanja Kebutuhan</option>
+                <option value="Tagihan">Tagihan & Utilitas</option>
+                <option value="Hiburan">Hiburan & Liburan</option>
+                <option value="Gaji">Gaji / Pendapatan</option>
+                <option value="Lainnya">Lainnya</option>
+              </select>
+              <select id="sortFilter">
+                <option value="newest">Terbaru</option>
+                <option value="oldest">Terlama</option>
+                <option value="highest">Nominal Terbesar</option>
+                <option value="lowest">Nominal Terkecil</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Tanggal</th>
+                  <th>Keterangan</th>
+                  <th>Kategori</th>
+                  <th>Tipe</th>
+                  <th class="text-right">Jumlah</th>
+                  <th class="text-center">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="allTransactionsBody">
+                <!-- Injected via JS -->
+              </tbody>
+            </table>
+          </div>
+          <div id="emptyState" class="empty-state hidden">
+            <div class="empty-icon">&#128269;</div>
+            <h4>Tidak ada transaksi yang cocok</h4>
+            <p class="subtext">Coba atur ulang filter pencarian atau tambahkan catatan baru.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 3: DETAILED ANALYTICS -->
+      <section id="tab-analytics" class="tab-pane">
+        <div class="dashboard-grid">
+          <div class="panel-card chart-panel">
+            <div class="panel-header">
+              <div>
+                <h3 class="panel-title">Kumulatif Arus Finansial Bulanan</h3>
+                <span class="panel-subtitle">Proyeksi pertumbuhan tabungan & rasio pengeluaran</span>
+              </div>
+            </div>
+            <div class="chart-container">
+              <canvas id="lineChart" width="600" height="280"></canvas>
+            </div>
+          </div>
+
+          <div class="panel-card">
+            <div class="panel-header">
+              <div>
+                <h3 class="panel-title">Rasio 50/30/20</h3>
+                <span class="panel-subtitle">Evaluasi kesehatan finansial</span>
+              </div>
+            </div>
+            <div class="ratio-breakdown" id="ratioMetrics">
+              <!-- Injected via JS -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 4: BUDGETING -->
+      <section id="tab-budget" class="tab-pane">
+        <div class="panel-card max-w-xl">
+          <div class="panel-header">
+            <div>
+              <h3 class="panel-title">Konfigurasi Anggaran Bulanan</h3>
+              <span class="panel-subtitle">Tentukan batas maksimal pengeluaran bulanan</span>
+            </div>
+          </div>
+          <form id="budgetConfigForm" class="budget-form">
+            <div class="form-group">
+              <label for="monthlyBudgetInput">Target Limit Bulanan (Rp)</label>
+              <input type="number" id="monthlyBudgetInput" min="100000" step="50000" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Simpan Anggaran</button>
+          </form>
+
+          <div class="budget-status-card mt-6" id="budgetDetailedStatus">
+            <!-- Dynamic info -->
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Modal: Tambah Transaksi -->
+  <div id="transactionModal" class="modal-overlay hidden">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 id="modalTitle">Tambah Transaksi</h3>
+        <button id="closeModalBtn" class="btn-close" aria-label="Close">&times;</button>
+      </div>
+      <form id="transactionForm" class="modal-body">
+        <input type="hidden" id="editId">
+        
+        <div class="form-row type-toggle-row">
+          <label class="radio-tab">
+            <input type="radio" name="txType" value="expense" checked>
+            <span class="radio-label expense-label">Pengeluaran</span>
+          </label>
+          <label class="radio-tab">
+            <input type="radio" name="txType" value="income">
+            <span class="radio-label income-label">Pemasukan</span>
+          </label>
+        </div>
+
+        <div class="form-group">
+          <label for="txAmount">Nominal (Rp)</label>
+          <input type="number" id="txAmount" placeholder="Contoh: 50000" required min="100">
+        </div>
+
+        <div class="form-group">
+          <label for="txDesc">Keterangan</label>
+          <input type="text" id="txDesc" placeholder="Contoh: Makan Siang / Gaji Freelance" required>
+        </div>
+
+        <div class="form-row two-cols">
+          <div class="form-group">
+            <label for="txCategory">Kategori</label>
+            <select id="txCategory" required>
+              <option value="Makanan">Makanan & Minuman</option>
+              <option value="Transport">Transportasi</option>
+              <option value="Belanja">Belanja Kebutuhan</option>
+              <option value="Tagihan">Tagihan & Utilitas</option>
+              <option value="Hiburan">Hiburan & Liburan</option>
+              <option value="Gaji">Gaji / Income</option>
+              <option value="Lainnya">Lainnya</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="txDate">Tanggal</label>
+            <input type="date" id="txDate" required>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="cancelModalBtn">Batal</button>
+          <button type="submit" class="btn btn-primary" id="saveTxBtn">Simpan Catatan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
